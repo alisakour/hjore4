@@ -23,10 +23,31 @@ Future<void> configureSelect() async {
 }
 
 Future<void> initializeNotifications() async {
-  const AndroidInitializationSettings initializationSettingsAndroid =
+   const AndroidInitializationSettings initializationSettingsAndroid =
   AndroidInitializationSettings('@mipmap/ic_launcher');
-  final InitializationSettings initializationSettings =
-  InitializationSettings(android: initializationSettingsAndroid);
+  final DarwinInitializationSettings initializationSettingsDarwin =
+  DarwinInitializationSettings(
+    requestAlertPermission: false,
+    requestBadgePermission: false,
+    requestSoundPermission: false,
+    onDidReceiveLocalNotification:
+        (int id, String title, String body, String payload) async {
+      didReceiveLocalNotificationStream.add(
+        ReceivedNotification(
+          id: id,
+          title: title,
+          body: body,
+          payload: payload,
+        ),
+      );
+    },
+  );
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
+  );
+
 
 
 
